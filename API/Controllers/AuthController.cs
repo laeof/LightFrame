@@ -2,7 +2,7 @@ using API.Requests;
 using Application.UseCases;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API;
+namespace API.Controllers;
 
 [Route("[controller]")]
 [ApiController]

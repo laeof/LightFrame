@@ -1,10 +1,9 @@
-using System.ComponentModel;
-using System.Security.Cryptography;
+namespace Application.DTO;
 
-namespace Domain.Entities;
-
-public class Note : EntityBase
+public class NoteDto
 {
+    public Guid Id { get; set; }
+    public bool IsDisabled = false;
     public string Start { get; set; } = string.Empty;
     public string End { get; set; } = string.Empty;
     public string Day { get; set; } = string.Empty;
