@@ -2,6 +2,7 @@ using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,11 +17,14 @@ public static class DependencyInjection
         services.AddScoped<IJwtService, JwtService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<INoteService, NoteService>();
+        services.AddScoped<IRoomService, RoomService>();
 
         services.AddScoped<INoteRepository, NoteRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
+        services.AddScoped<IPhotographerRepository, PhotographerRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
 
         // services.AddDbContext<AppDbContext>(options =>
         // {

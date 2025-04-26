@@ -33,7 +33,7 @@ public class RefreshTokenUseCase
         await userService.RevokeRefreshTokenAsync(refreshToken);
         var newRefreshTokenSaved = await userService.AddRefreshTokenAsync(userResult.Value.Id, newRefreshTokenResult.Value);
 
-        if (newRefreshTokenResult.IsFailure) return Result<ITokens>.Faillure(newRefreshTokenResult.Error);
+        if (newRefreshTokenSaved.IsFailure) return Result<ITokens>.Faillure(newRefreshTokenSaved.Error);
 
         return Result<ITokens>.Success(
             new Tokens { AccessToken = newAccessTokenResult.Value, RefreshToken = newRefreshTokenResult.Value });

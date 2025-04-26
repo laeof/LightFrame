@@ -1,7 +1,5 @@
-using Application.Common;
 using Application.DTO;
 using Application.Interfaces.Repository;
-using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -39,5 +37,11 @@ public class HireController : ControllerBase
         if (result.IsFailure) return BadRequest(result);
 
         return Ok(result);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetPhotographers()
+    {
+        return Ok();
     }
 }

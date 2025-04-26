@@ -11,9 +11,9 @@ namespace Infrastructure.Services;
 
 public class JwtService : IJwtService
 {
-    private string jwtKey = Environment.GetEnvironmentVariable("ASPNET_SECRETKEYSAUTHENTIC")!;
-    private string issuer = Environment.GetEnvironmentVariable("ASPNET_ISSUERAUTHENTIC")!;
-    private string audience = Environment.GetEnvironmentVariable("ASPNET_AUDIENCEAUTHENTIC")!;
+    private readonly string jwtKey = Environment.GetEnvironmentVariable("SECRETKEY")!;
+    private readonly string issuer = Environment.GetEnvironmentVariable("ISSUER")!;
+    private readonly string audience = Environment.GetEnvironmentVariable("AUDIENCE")!;
     public IResult<string> GenerateAccessToken(Guid userId, string email, IList<string> roles)
     {
         if (jwtKey is null) return Result<string>.Faillure(new("500", "Jwt key is null"));
@@ -22,7 +22,7 @@ public class JwtService : IJwtService
 
         var claims = new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, userId.ToString()),
+            new(ClaimTypes.Name, userId.ToString()),
             new(ClaimTypes.Email, email),
         };
 

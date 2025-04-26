@@ -10,4 +10,5 @@ public interface IUserService {
     Task<IResult<bool>> AddRefreshTokenAsync(Guid userId, string newRefreshToken);
     Task<IResult<bool>> ExistsByEmailAsync(string email); 
     Task<IResult<User>> RegisterUserAsync(Register dto, string passwordHash);
+    Task<IResult<User>> GetUser();
 }

@@ -8,7 +8,7 @@ namespace API.Controllers;
 [ApiController]
 public class RoomController : ControllerBase
 {
-    public IRoomService roomService;
+    private readonly IRoomService roomService;
     public RoomController(IRoomService roomService)
     {
         this.roomService = roomService;

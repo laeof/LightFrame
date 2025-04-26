@@ -1,5 +1,6 @@
 using API.Requests;
 using Application.UseCases;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -21,7 +22,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signup")]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody]RegisterRequest request)
     {
         var userResult = await registerUserUseCase.ExecuteAsync(
             new()
@@ -44,7 +45,7 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("signin")]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login([FromBody]LoginRequest request)
     {
         var tokensResult = await authenticateUserUseCase.ExecuteAsync(request.Email, request.Password);
 
@@ -53,9 +54,13 @@ public class AuthController : ControllerBase
         return Ok(tokensResult.Value);
     }
 
+    [Authorize]
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+    public async Task<IActionResult> Refresh([FromHeader]RefreshTokenRequest request)
     {
+        if (request.RefreshToken == "" || request.AccessToken == "")
+            return BadRequest();
+
         var tokensResult = await refreshTokenUseCase.ExecuteAsync(request.RefreshToken);
 
         if (tokensResult.IsFailure) return Unauthorized(new { tokensResult.Error });

@@ -4,6 +4,10 @@ using Application.Interfaces;
 using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace Infrastructure.Services;
 
@@ -12,14 +16,17 @@ public class UserService : IUserService
     private readonly IUserRepository userRepository;
     private readonly IUserRoleRepository userRoleRepository;
     private readonly IRefreshTokensRepository refreshTokensRepository;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
     public UserService(IRefreshTokensRepository refreshTokensRepository,
         IUserRepository userRepository,
-        IUserRoleRepository userRoleRepository)
+        IUserRoleRepository userRoleRepository,
+        IHttpContextAccessor httpContextAccessor)
     {
         this.refreshTokensRepository = refreshTokensRepository;
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
+        this.httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<IResult<bool>> AddRefreshTokenAsync(Guid userId, string newRefreshToken)
@@ -85,5 +92,20 @@ public class UserService : IUserService
         var revokedResult = refreshTokensRepository.RevokeRefreshTokenAsync(oldRefreshToken);
 
         return revokedResult;
+    }
+
+    public async Task<IResult<User>> GetUser()
+    {
+        var user = httpContextAccessor.HttpContext?.User;
+
+        if (user == null)
+            return Result<User>.Faillure(new("401", "No user"));
+
+        var userid = user.FindFirst(ClaimTypes.Name);
+
+        if (userid == null)
+            return Result<User>.Faillure(new("401", "No user id"));
+
+        return await userRepository.GetUserByIdAsync(Guid.Parse(userid.Value));
     }
 }
