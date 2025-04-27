@@ -18,6 +18,13 @@ public class NoteService : INoteService
         return result;
     }
 
+    public async Task<IResult<List<Note>>> GetMyNotes(Guid id)
+    {
+        var result = await noteRepository.GetNotesWithUserId(id);
+
+        return result;
+    }
+
     public async Task<IResult<Note>> GetNoteIdAsync(Guid id)
     {
         var result = await noteRepository.GetNoteByIdAsync(id);

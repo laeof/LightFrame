@@ -34,6 +34,15 @@ public class PhotographerRepository : IPhotographerRepository
         return Result<Photographer>.Success(photographerResult);
     }
 
+    public async Task<IResult<List<Photographer>>> GetPhotographers()
+    {
+        var result = await context.Photographers.Where(x => !x.IsDisabled).ToListAsync();
+
+        if (result == null) return Result<List<Photographer>>.Faillure(new("404", "No any photographers"));
+
+        return Result<List<Photographer>>.Success(result);
+    }
+
     public async Task<IResult<Photographer>> HirePhotographer(Photographer photographer)
     {
         try

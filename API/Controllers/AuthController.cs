@@ -56,7 +56,7 @@ public class AuthController : ControllerBase
 
     [Authorize]
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromHeader]RefreshTokenRequest request)
+    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
     {
         if (request.RefreshToken == "" || request.AccessToken == "")
             return BadRequest();

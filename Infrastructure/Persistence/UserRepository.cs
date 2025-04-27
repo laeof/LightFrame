@@ -18,6 +18,7 @@ public class UserRepository : IUserRepository
     {
         try
         {
+            user.PhotoUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/User-avatar.svg/2048px-User-avatar.svg.png";
             context.Entry(user).State = EntityState.Added;
             await context.SaveChangesAsync();
         }

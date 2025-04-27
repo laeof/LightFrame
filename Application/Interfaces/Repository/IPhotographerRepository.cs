@@ -6,4 +6,5 @@ public interface IPhotographerRepository
 {
     public Task<IResult<Photographer>> HirePhotographer(Photographer photographer);
     public Task<IResult<Photographer>> FirePhotographer(Guid id);
+    public Task<IResult<List<Photographer>>> GetPhotographers();
 }

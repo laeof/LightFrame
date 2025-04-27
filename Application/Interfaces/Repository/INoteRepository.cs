@@ -7,4 +7,5 @@ public interface INoteRepository {
     Task<IResult<List<Note>>> GetNotesForADayAsync(string day);
     Task<IResult<Note>> AddNoteAsync(Note note);
     Task<IResult<Note>> UpdateNoteAsync(Note note);
+    Task<IResult<List<Note>>> GetNotesWithUserId(Guid userId);
 }

@@ -31,10 +31,20 @@ public class NoteController : ControllerBase
         return Ok(result.Value);
     }
 
-    [HttpGet("GetDay")]
-    public async Task<IActionResult> GetAllNotesForADay(DayRequest request)
+    [HttpGet("GetNotesWithUserId/{userId}")]
+    public async Task<IActionResult> GetMyNotes(Guid userId)
     {
-        var result = await noteService.GetNotesDayAsync(request.day + request.month + request.year);
+        var result = await noteService.GetMyNotes(userId);
+
+        if (result.IsFailure) return NotFound(result.Error);
+
+        return Ok(result.Value);
+    }
+
+    [HttpGet("GetDay")]
+    public async Task<IActionResult> GetAllNotesForADay([FromHeader]DayRequest request)
+    {
+        var result = await noteService.GetNotesDayAsync(request.Day + request.Month + request.Year);
 
         if (result.IsFailure) return NotFound(result.Error);
 
@@ -62,8 +72,9 @@ public class NoteController : ControllerBase
         return Ok(result.Value);
     }
 
+    [Authorize]
     [HttpPut("Pay")]
-    public async Task<IActionResult> PayNote(Guid id)
+    public async Task<IActionResult> PayNote([FromQuery]Guid id)
     {
         var checkResult = await noteService.GetNoteIdAsync(id);
 
@@ -79,7 +90,35 @@ public class NoteController : ControllerBase
             Start = checkResult.Value.Start,
             End = checkResult.Value.End,
             PaidState = true,
+            RoomId = checkResult.Value.RoomId,
             IsDisabled = checkResult.Value.IsDisabled,
+        });
+
+        if (modifyResult.IsFailure) return BadRequest(modifyResult.Error);
+
+        return Ok(modifyResult.Value);
+    }
+
+    [Authorize]
+    [HttpPut("Cancel")]
+    public async Task<IActionResult> CancelNote([FromQuery] Guid id)
+    {
+        var checkResult = await noteService.GetNoteIdAsync(id);
+
+        if (checkResult.IsFailure) return NotFound(checkResult.Error);
+
+        var modifyResult = await modifyNoteUseCase.ExecuteAsync(new()
+        {
+            Id = checkResult.Value.Id,
+            CustomerId = checkResult.Value.CustomerId,
+            CustomerName = checkResult.Value.CustomerName,
+            CustomerPhone = checkResult.Value.CustomerPhone,
+            Day = checkResult.Value.Day,
+            Start = checkResult.Value.Start,
+            End = checkResult.Value.End,
+            PaidState = checkResult.Value.PaidState,
+            RoomId = checkResult.Value.RoomId,
+            IsDisabled = true
         });
 
         if (modifyResult.IsFailure) return BadRequest(modifyResult.Error);

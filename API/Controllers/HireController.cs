@@ -19,7 +19,7 @@ public class HireController : ControllerBase
         var result = await photographerRepository.HirePhotographer(new()
         {
             Email = dto.Email,
-            Name = dto.Email,
+            Name = dto.Name,
             PhotoUrl = dto.PhotoUrl,
             WorkExperience = dto.WorkExperience,
         });
@@ -42,6 +42,10 @@ public class HireController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetPhotographers()
     {
-        return Ok();
+        var result = await photographerRepository.GetPhotographers();
+
+        if (result.IsFailure) return BadRequest(result);
+
+        return Ok(result);
     }
 }

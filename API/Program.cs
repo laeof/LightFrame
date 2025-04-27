@@ -15,6 +15,38 @@ builder.Services.AddInfrastructure();
 
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidAudience = Environment.GetEnvironmentVariable("AUDIENCE")!,
+        ValidIssuer = Environment.GetEnvironmentVariable("ISSUER")!,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = false,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRETKEY")!)),
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = 400;
+            context.Response.ContentType = "application/json";
+            var result = JsonSerializer.Serialize(new { message = "Unauthorized from challenge" });
+            return context.Response.WriteAsync(result);
+        }
+    };
+});
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddCors(options =>
@@ -26,58 +58,15 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddAuthentication(x =>
-{
-    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRETKEY")!)),
-    };
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine("OnAuthenticationFailed: " + context.Exception.Message);
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            Console.WriteLine("OnTokenValidated: Token is valid");
-            Console.WriteLine($"IsAuthenticated: {context.Principal?.Identity?.IsAuthenticated}");
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
-        {
-            Console.WriteLine("OnChallenge triggered!");
-            context.HandleResponse();
-            context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            var result = JsonSerializer.Serialize(new { message = "Unauthorized from challenge" });
-            return context.Response.WriteAsync(result);
-        }
-    };
-});
-
 var app = builder.Build();
-
-app.UseCors();
-app.UseHttpsRedirection();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
+app.UseCors();
+
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 app.Run();

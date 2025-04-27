@@ -24,6 +24,8 @@ public class ModifyNoteUseCase
             Start = dto.Start,
             Id = dto.Id,
             IsDisabled = dto.IsDisabled,
+            RoomId = dto.RoomId,
+            PaidState = dto.PaidState,
         };
 
         var result = await noteService.ModifyNoteAsync(note);
