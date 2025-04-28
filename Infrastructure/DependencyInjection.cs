@@ -2,7 +2,6 @@ using Application.Interfaces.Repository;
 using Application.Interfaces.Services;
 using Infrastructure.Persistence;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,17 +25,17 @@ public static class DependencyInjection
         services.AddScoped<IPhotographerRepository, PhotographerRepository>();
         services.AddScoped<IRoomRepository, RoomRepository>();
 
-        // services.AddDbContext<AppDbContext>(options =>
-        // {
-        //     options.UseNpgsql(
-        //         $"Host={Environment.GetEnvironmentVariable("ASPNETCORE_AAUTHENTIC_DB_SERVER")};" +
-        //         $"Port={Environment.GetEnvironmentVariable("ASPNETCORE_AAUTHENTIC_DB_PORT")};" +
-        //         $"Username={Environment.GetEnvironmentVariable("ASPNETCORE_AAUTHENTIC_DB_USER")};" +
-        //         $"Password={Environment.GetEnvironmentVariable("ASPNETCORE_AAUTHENTIC_DB_PASS")};" +
-        //         $"Database={Environment.GetEnvironmentVariable("ASPNETCORE_AAUTHENTIC_DB_NAME")};");
-        // });
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(
+                $"Host={Environment.GetEnvironmentVariable("ASPNETCORE_DB_SERVER")};" +
+                $"Port={Environment.GetEnvironmentVariable("ASPNETCORE_DB_PORT")};" +
+                $"Username={Environment.GetEnvironmentVariable("ASPNETCORE_DB_USER")};" +
+                $"Password={Environment.GetEnvironmentVariable("ASPNETCORE_DB_PASS")};" +
+                $"Database={Environment.GetEnvironmentVariable("ASPNETCORE_DB_NAME")};");
+        });
 
-        services.AddDbContext<AppDbContext>(x => x.UseNpgsql("Host=127.0.0.1;Port=5432;Username=postgres;Password=bt7iC4nN07T0f1nDmyp4ss;Database=lightframe"));
+        // services.AddDbContext<AppDbContext>(x => x.UseNpgsql("Host=127.0.0.1;Port=5432;Username=postgres;Password=bt7iC4nN07T0f1nDmyp4ss;Database=lightframe"));
 
         return services;
     }

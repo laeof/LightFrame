@@ -42,31 +42,35 @@ public class AppDbContext : DbContext
         );
 
         modelBuilder.Entity<Room>().HasData(
-            new Room { 
+            new Room
+            {
                 Id = Guid.Parse("f2231291-e0c9-4823-a471-0e18c86a1e9c"),
                 Address = "123 Main St, Springfield, IL 62701",
-                Name = "Білий зал",
+                Name = "Р‘С–Р»РёР№ Р·Р°Р»",
                 PhotoUrl = ["https://artmix.kh.ua/wp-content/uploads/2021/02/bv5c0002sajt-white-glavnaya-1-1.jpg"],
                 Price = 500,
             },
-            new Room { 
+            new Room
+            {
                 Id = Guid.Parse("160b2313-7bb9-4227-a6b6-5b0e70c201a0"),
                 Address = "456 Oak Ave, Los Angeles, CA 90001",
-                Name = "Чорний зал",
+                Name = "Р§РѕСЂРЅРёР№ Р·Р°Р»",
                 PhotoUrl = ["https://artmix.kh.ua/wp-content/uploads/2020/02/bv5c0505-1.jpg"],
                 Price = 550,
             },
-            new Room { 
+            new Room
+            {
                 Id = Guid.Parse("8aa73e16-8e81-499f-8dce-977ba605396a"),
                 Address = "789 Pine Rd, Dallas, TX 75201",
-                Name = "Затишний зал",
+                Name = "Р—Р°С‚РёС€РЅРёР№ Р·Р°Р»",
                 PhotoUrl = ["https://artmix.kh.ua/wp-content/uploads/2020/02/655724130_3_1000x700_interernaya-fotostudiya-v-samom-tsentre-harkova-razvlecheniya-iskusstvo-foto-video.jpg"],
                 Price = 450
             },
-            new Room { 
+            new Room
+            {
                 Id = Guid.Parse("53b11b95-56a4-4e72-9d1f-9b33f4ed3f68"),
                 Address = "321 Maple Dr, New York, NY 10001",
-                Name = "Світлий зал",
+                Name = "РЎРІС–С‚Р»РёР№ Р·Р°Р»",
                 PhotoUrl = ["https://artmix.kh.ua/wp-content/uploads/2020/02/ciklorama1.jpg"],
                 Price = 650
             }

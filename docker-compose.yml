@@ -4,12 +4,27 @@ services:
     image: lightframe
     ports:
       - '5164:8080'
+    depends_on:
+      - db
     environment:
-      - ASPNET_SECRETKEYSAUTHENTIC=qweqweqweqweqweqweqweqweqweqweqweqwe
-      - ASPNET_ISSUERAUTHENTIC=127.0.0.1
-      - ASPNET_AUDIENCEAUTHENTIC=127.0.0.1:5164
-      - ASPNETCORE_AAUTHENTIC_DB_SERVER=172.16.0.0
-      - ASPNETCORE_AAUTHENTIC_DB_PORT=5432
-      - ASPNETCORE_AAUTHENTIC_DB_USER=postgres
-      - ASPNETCORE_AAUTHENTIC_DB_PASS=bt7iC4nN07T0f1nDmyp4ss
-      - ASPNETCORE_AAUTHENTIC_DB_NAME=lightframe
+      - SECRETKEY=qweqweqweqweqweqweqweqweqweqweqweqwe
+      - ISSUER=127.0.0.1:5164
+      - AUDIENCE=127.0.0.1:5164
+      - ASPNETCORE_DB_SERVER=psqldb
+      - ASPNETCORE_DB_PORT=5432
+      - ASPNETCORE_DB_USER=postgres
+      - ASPNETCORE_DB_PASS=bt7iC4nN07T0f1nDmyp4ss
+      - ASPNETCORE_DB_NAME=lightframe
+  db:
+    container_name: psqldb
+    image: postgres
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: bt7iC4nN07T0f1nDmyp4ss
+      POSTGRES_DB: lightframe
+  lightframeclient:
+    image: lightframeclient
+    ports: 
+      - "4200:4200"
